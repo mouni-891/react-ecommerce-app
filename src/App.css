@@ -1,0 +1,12 @@
+.product-list{
+    display: flex;
+    color:blue;
+    flex-direction:column;
+    margin: 40px;
+    align-items: center;
+}
+
+
+.app-content {
+  padding-top: 8px; /* adjust based on header height */
+}

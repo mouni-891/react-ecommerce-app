@@ -1,0 +1,263 @@
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #39397a;
+  color: #060606;
+  height: auto;
+  font-size: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+   
+}
+
+.header-left {
+  flex-shrink: 0;
+  flex: 0 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-icon {
+  font-size: 28px;
+  line-height: 1;
+  animation: bounce 2s infinite;
+  display: inline-block;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.logo-text {
+  font-size: 25px;
+  font-family: "Lucida Sans", Geneva, Verdana, sans-serif;
+  font-weight: 800;
+  color: #f67636;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.header-center {
+  display: flex;
+  width: 100%;
+    max-width: 100%; 
+  align-items: center;
+  background-color: white;
+  padding: 8px 14px;
+  border-radius: 25px;
+  gap: 10px;
+  flex: 1;
+  max-width: 450px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.header-center input{
+                   
+  max-width: 100%;
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.search-icon img {
+  display: block;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  background-color: transparent;
+  color: #333;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.search-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.1);
+}
+
+.search-btn img {
+  display: block;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: white;
+  color: #7676b8;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  
+ 
+}
+
+.login{
+  font-size: 15px;
+}
+
+.login-btn:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn img {
+  display: block;
+  width: 18px;
+  height: 18px;
+  
+}
+
+.wishlist-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  color: rgb(255, 255, 255);
+ 
+  
+}
+
+.wishlist-btn:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  transform: scale(1.15);
+  
+}
+
+.wishlist-btn img {
+  display: block;
+  filter: brightness(0) invert(1);
+  width: 27px;
+  height: 27px;
+  
+}
+
+.cart-btn {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgb(250, 246, 246);
+  
+}
+
+.cart-btn:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  transform: scale(1.15);
+}
+
+.cart-btn img {
+  display: block;
+  filter: brightness(0) invert(-8);
+  width: 28px;
+  height: 30px;
+  padding-top: 2px;
+  transform: translateY(-1px);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;  right: -6px;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  animation: badge-pulse 0.6s ease;
+}
+
+@keyframes badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
