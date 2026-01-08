@@ -1,5 +1,5 @@
-import CartIcon from "../Cart/CartIcon";
-import WishlistIcon from "../Wishlist/WishlistIcon";
+import CartIcon from "./CartIcon";
+import WishlistIcon from "./WishlistIcon";
 
 
 function Header() {

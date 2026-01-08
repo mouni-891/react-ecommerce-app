@@ -2,8 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./HotPicks.css";
 
-import CartIcon from "../Cart/CartIcon";
-
 const HotPicks = () => {
   const navigate = useNavigate();
 
@@ -13,7 +11,6 @@ const HotPicks = () => {
       name: "Men Shirt",
       img: "/hotPicks-images/menShirt.png",
       offer: "Min. 50% Off",
-    
     },
     {
       id: 2,
@@ -85,7 +82,6 @@ const HotPicks = () => {
       img: "/hotPicks-images/microwaveOven.png",
       offer: "Min. 50% Off",
     },
-    
   ];
 
   return (

@@ -99,10 +99,12 @@
   font-weight: 500;
   color: #212121;
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   min-height: auto;
    margin-top: auto;        
   font-size: 14px;
+  
+  
 }
 
 .product-offer {
