@@ -6,11 +6,10 @@ import Layout from "./Ecommerce/components/Layout/Layout";
 import CartPage from "./Ecommerce/pages/Cart/CartPage";
 import WishlistPage from "./Ecommerce/pages/Wishlist/WishlistPage";
 import Login from "./Ecommerce/pages/Login/Login";
-
 import { CartProvider } from "@context/CartContext";
 import { WishlistProvider } from "@context/WishlistContext";
-
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./Ecommerce/auth/ProtectedRoute";
 
 function App() {
   return (
@@ -33,8 +32,23 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/category/:category" element={<CategoryPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/wishlist" element={<WishlistPage />} />
+
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <CartPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/wishlist"
+                element={
+                  <ProtectedRoute>
+                    <WishlistPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/login" element={<Login />} />
             </Route>
           </Routes>
