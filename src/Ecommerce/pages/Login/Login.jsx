@@ -5,6 +5,7 @@ import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -12,7 +13,7 @@ function Login() {
     e.preventDefault();
 
     login({
-      name: "Mounika",
+      name,
       email,
     });
 
@@ -26,6 +27,13 @@ function Login() {
         <p>Sign in to your account</p>
 
         <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Enter name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <input
             type="email"
             placeholder="Enter email"
