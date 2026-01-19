@@ -11,9 +11,11 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@context': path.resolve(__dirname, './src/Ecommerce/context'),
-      '@components': path.resolve(__dirname, './src/Ecommerce/HomePage/components'),
-      '@cart': path.resolve(__dirname, './src/Ecommerce/HomePage/components/Cart'),
-      '@home': path.resolve(__dirname, './src/Ecommerce/HomePage/components/Home'),
+      '@components': path.resolve(__dirname, './src/Ecommerce/components'),
+      '@cart': path.resolve(__dirname, './src/Ecommerce/pages/Cart'),
+      '@home': path.resolve(__dirname, './src/Ecommerce/components/Home'),
+      '@wishlist': path.resolve(__dirname, './src/Ecommerce/pages/Wishlist'),
+      '@auth': path.resolve(__dirname, './src/Ecommerce/auth'),
     },
   },
 });

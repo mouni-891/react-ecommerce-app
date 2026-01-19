@@ -6,7 +6,7 @@ function CartIcon () {
   const navigate = useNavigate();
     return(
   <button className="cart-btn" title="Shopping Cart" onClick={() => navigate("/cart")}>
-    <img src="/Images/shopping-cart1.png" alt="Cart" width="23px" />
+    <img src="/Images/shopping-cart.png" alt="Cart" width="23px" />
     <sup className="cart-badge">{cartItems.length}</sup>
   </button>
   );

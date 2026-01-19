@@ -1,21 +1,36 @@
-// src/Ecommerce/context/WishlistContext.jsx
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
-const WishlistContext = createContext();
+const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = localStorage.getItem("wishlist");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
 
   const toggleWishlist = (product) => {
-    setWishlist((prev) =>
-      prev.some((item) => item.id === product.id)
+    setWishlist((prev = []) => {
+      const exists = prev.some((item) => item.id === product.id);
+      return exists
         ? prev.filter((item) => item.id !== product.id)
-        : [...prev, product]
-    );
+        : [...prev, product];
+    });
+  };
+
+  const isInWishlist = (productId) => {
+    return Array.isArray(wishlist)
+      ? wishlist.some((item) => item.id === productId)
+      : false;
   };
 
   return (
-    <WishlistContext.Provider value={{ wishlist, toggleWishlist }}>
+    <WishlistContext.Provider
+      value={{ wishlist, toggleWishlist, isInWishlist }}
+    >
       {children}
     </WishlistContext.Provider>
   );

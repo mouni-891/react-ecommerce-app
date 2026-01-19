@@ -7,7 +7,7 @@ function Categories() {
     { id: 1, icon: "👔", name: "Men", link: "/category/men" },
     { id: 2, icon: "👗", name: "Women", link: "/category/women" },
     { id: 3, icon: "🧸", name: "Kids", link: "/category/kids" },
-    { id: 4, icon: "📱", name: "Electronics", link: "/category/electronics"},
+    { id: 4, icon: "📱", name: "Electronics", link: "/category/electronics" },
     { id: 5, icon: "👟", name: "Footwear", link: "/category/footwear" },
     { id: 6, icon: "💄", name: "Beauty", link: "/category/beauty" },
     { id: 7, icon: "🎾", name: "Sports", link: "/category/sports" },
@@ -17,11 +17,7 @@ function Categories() {
   return (
     <nav className="categories-container" aria-label="Product categories">
       {categories.map((category) => (
-        <Link 
-          key={category.id} 
-          to={category.link} 
-          className="category-card"
-        >
+        <Link key={category.id} to={category.link} className="category-card">
           <div className="category-icon-wrapper">
             <span className="category-icon" aria-hidden="true">
               {category.icon}
@@ -35,6 +31,5 @@ function Categories() {
 }
 
 export default Categories;
-
 
 //needs to modify to route into men,women...pages

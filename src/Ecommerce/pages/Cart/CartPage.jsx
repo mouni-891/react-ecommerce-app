@@ -1,4 +1,5 @@
 import { useCart } from "@context/CartContext";
+
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 import EmptyCart from "./EmptyCart";
@@ -15,7 +16,7 @@ function CartPage() {
       <h2>Your Cart</h2>
       <div className="cart-items-container">
         {cartItems.map((item) => (
-          <CartItem key={item.id} item={item} /> 
+          <CartItem key={item.id} item={item} />
         ))}
       </div>
       <CartSummary />

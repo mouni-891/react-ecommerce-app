@@ -5,10 +5,10 @@ function CartSummary() {
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
-  const tax = subtotal * 0.18; // 18% GST (India)
+  const tax = subtotal * 0.18;
   const total = subtotal + tax;
   const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -26,8 +26,8 @@ function CartSummary() {
     };
     alert(
       `Proceeding to checkout...\nTotal Amount: ₹${total.toFixed(
-        2
-      )}\n\nIn production, this would redirect to payment gateway (Razorpay/Stripe/PayPal)`
+        2,
+      )}\n\nIn production, this would redirect to payment gateway (Razorpay/Stripe/PayPal)`,
     );
   };
 

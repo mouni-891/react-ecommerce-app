@@ -2,11 +2,9 @@
     display: flex;
     color:blue;
     flex-direction:column;
-    margin: 40px;
+    margin:0 40px 40px;
+    padding-top: 90px;
     align-items: center;
 }
 
 
-/* .app-content {
-  padding-top: 5px; 
-} */

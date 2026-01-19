@@ -2,10 +2,10 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "@context/CartContext";
 import "./CategoryPage.css";
-// import { useWishlist } from "../../context/WishlistContext";
+import { useWishlist } from "@context/WishlistContext";
 
 function CategoryPage() {
-  // const { toggleWishlist } = useWishlist();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const { category } = useParams();
   const { addToCart, isInCart } = useCart();
   const navigate = useNavigate();
@@ -234,48 +234,63 @@ function CategoryPage() {
     ],
   };
 
- return (
-  <div className="category-page">
-    <h1>{category ? category.toUpperCase() : "CATEGORY"}</h1>
+  return (
+    <div className="category-page">
+      <h1>{category ? category.toUpperCase() : "CATEGORY"}</h1>
 
-    <div className="category-products-grid">
-      {products[category]?.map((item) => (
-        <div key={item.id} className="category-product-card">
-          <img
-            src={item.img}
-            alt={item.name}
-            className="category-product-img"
-          />
+      <div className="category-products-grid">
+        {products[category]?.map((item) => (
+          <div key={item.id} className="category-product-card">
+            <img
+              src={item.img}
+              alt={item.name}
+              className="category-product-img"
+            />
 
-          <div className="category-product-content">
-            <h4 className="category-product-name">{item.name}</h4>
-            <p className="category-product-price">₹{item.price}</p>
-            <p className="category-product-rating">
-              {item.rating} ({item.reviews})
-            </p>
+            <div className="category-product-content">
+              <h4 className="category-product-name">{item.name}</h4>
+              <p className="category-product-price">₹{item.price}</p>
+              <p className="category-product-rating">
+                {item.rating} ({item.reviews})
+              </p>
+            </div>
+
+            <div className="category-product-actions">
+              <button
+                className="category-cart-button"
+                onClick={() => {
+                  if (isInCart(item.id)) {
+                    navigate("/cart");
+                  } else {
+                    addToCart(item);
+                  }
+                }}
+              >
+                {isInCart(item.id) ? "Go to Cart" : "Add to Cart"}
+              </button>
+              <button
+                className="category-wishlist-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleWishlist(item);
+                }}
+              >
+                <img
+                  src={
+                    isInWishlist(item.id)
+                      ? "/wishlist/favorite2.png"
+                      : "/wishlist/favorite.png"
+                  }
+                  alt="wishlist"
+                  className="wishlist-icon"
+                />
+              </button>
+            </div>
           </div>
-
-          <div className="category-product-actions">
-            <button
-              className="category-cart-button"
-              onClick={() => {
-                if (isInCart(item.id)) {
-                  navigate("/cart");
-                } else {
-                  addToCart(item);
-                  alert("Item added to cart");
-                }
-              }}
-            >
-              {isInCart(item.id) ? "Go to Cart" : "Add to Cart"}
-            </button>
-            <button className="category-wishlist-button">💙</button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default CategoryPage;
