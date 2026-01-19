@@ -3,12 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "@context/CartContext";
 import "./CategoryPage.css";
 import { useWishlist } from "@context/WishlistContext";
+import { useAuth } from "@auth/AuthContext";
 
 function CategoryPage() {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { category } = useParams();
   const { addToCart, isInCart } = useCart();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const products = {
     clothing: [
@@ -259,6 +261,11 @@ function CategoryPage() {
               <button
                 className="category-cart-button"
                 onClick={() => {
+                  if (!user) {
+                    navigate("/login");
+                    return;
+                  }
+
                   if (isInCart(item.id)) {
                     navigate("/cart");
                   } else {
@@ -272,6 +279,12 @@ function CategoryPage() {
                 className="category-wishlist-button"
                 onClick={(e) => {
                   e.stopPropagation();
+
+                  if (!user) {
+                    navigate("/login");
+                    return;
+                  }
+
                   toggleWishlist(item);
                 }}
               >
