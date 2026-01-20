@@ -13,10 +13,6 @@
 .wishlist-empty-container::before {
   content: "";
   position: absolute;
-  /* top: -20%;
-  left: -50%;  */
-  /* width: 100%;
-  height: 100%; */
   animation: pulse 8s ease-in-out infinite;
 }
 
@@ -358,17 +354,15 @@
   transform: translateY(0);
 }
 
-/* Confirmation modal styles */
+/* Wishlist card – FINAL */
 .wishlist-item-confirms {
-  display: flex;
-  gap: 24px;
-  padding: 28px;
-  border: 2px solid #e9ecef;
-  border-radius: 20px;
-  max-width: 640px;
   background: #ffffff;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
-  transition: all 0.3s ease;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .wishlist-item-confirms:hover {
@@ -433,7 +427,7 @@
 
 @media (max-width: 768px) {
   .wishlist-page {
-    padding: 32px 24px;
+    padding: 32px 46px;
   }
 
   .wishlist-title {
@@ -446,6 +440,29 @@
     gap: 20px;
   }
 
+  .wishlist-item-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .wishlist-item-name {
+    text-align: center;
+  }
+
+  .wishlist-item-price {
+    text-align: center;
+  }
+
+  .wishlist-item-actions {
+    width: 100%;
+    align-items: center;
+  }
+
+  .wishlist-cart-btn,
+  .wishlist-remove-btn {
+    width: 90%;
+    max-width: 450px;
+  }
   .wishlist-card {
     flex-direction: column;
     text-align: center;
@@ -507,4 +524,92 @@
     padding: 14px 32px;
     font-size: 15px;
   }
+}
+
+/* Wishlist card */
+.wishlist-item-confirms {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Image wrapper */
+.wishlist-img-wrapper {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.wishlist-item-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Info section */
+.wishlist-item-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* Product name – clamp */
+.wishlist-item-name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 6px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Price */
+.wishlist-item-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #5b5cf0;
+  margin-bottom: 12px;
+}
+
+/* Actions pinned to bottom */
+.wishlist-item-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Buttons */
+.wishlist-cart-btn {
+  background: #3fa36c;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wishlist-cart-btn:disabled {
+  background: #8ccfb0;
+  cursor: not-allowed;
+}
+
+.wishlist-remove-btn {
+  background: #e74c3c;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
 }

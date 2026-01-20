@@ -100,7 +100,7 @@
 }
 
 .cart-item-image {
-  width: 180px;
+  width: 170px;
   height: 180px;
   object-fit: cover;
   flex-shrink: 0;

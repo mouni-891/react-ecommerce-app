@@ -10,6 +10,7 @@ import { CartProvider } from "@context/CartContext";
 import { WishlistProvider } from "@context/WishlistContext";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./Ecommerce/auth/ProtectedRoute";
+import ProductDetail from "./Ecommerce/pages/ProductDetail/ProductDetail";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                 }
               />
               <Route path="/login" element={<Login />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
             </Route>
           </Routes>
         </Router>
