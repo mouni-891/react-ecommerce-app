@@ -7,7 +7,6 @@
   border-bottom: 1px solid #ddd;
   flex-wrap: wrap;
   overflow-x: auto;
- 
 }
 
 .category-card {
@@ -93,14 +92,17 @@
 /* Small Tablet - max-width: 768px */
 @media (max-width: 768px) {
   .categories-container {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     padding: 16px 12px;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .category-card {
-    min-width: 85px;
-    padding: 10px 15px;
+    min-width: 0;
+    width:100%;
+    padding: 15px 5px;
   }
 
   .category-icon-wrapper {
@@ -115,6 +117,7 @@
   .category-name {
     font-size: 12px;
   }
+  
 }
 
 /* Mobile - max-width: 480px */
