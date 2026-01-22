@@ -4,6 +4,7 @@ import ProductData from "@data/ProductData";
 import { useCart } from "@context/CartContext";
 import { useWishlist } from "@context/WishlistContext";
 import { useAuth } from "@auth/AuthContext";
+import ProductFeatures from "./ProductFeatures";
 import "./ProductDetail.css";
 
 function ProductDetail() {
@@ -15,6 +16,8 @@ function ProductDetail() {
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
+  // State to handle changing the main image when a thumbnail is clicked
+  const [activeImage, setActiveImage] = useState(null);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -23,23 +26,26 @@ function ProductDetail() {
 
   const product = ProductData.find((item) => item.id === id);
 
-  // Set default size for clothing items
+  // Set default size and image
   useEffect(() => {
-    if (product && product.sizeOptions && product.sizeOptions.length > 0) {
-      setSelectedSize(product.sizeOptions[0]);
+    if (product) {
+      if (product.sizeOptions?.length > 0) {
+        setSelectedSize(product.sizeOptions[0]);
+      }
+      setActiveImage(product.img);
     }
   }, [product]);
 
   if (!product) {
     return (
-      <div className="product-not-found">
+      <div className="Product-not-found">
         <h2>Product not found</h2>
         <button onClick={() => navigate("/")}>Go to Home</button>
       </div>
     );
   }
 
-  // Related products from same category
+  // Related products logic
   const relatedProducts = ProductData.filter(
     (item) => item.category === product.category && item.id !== product.id,
   ).slice(0, 4);
@@ -57,23 +63,15 @@ function ProductDetail() {
       navigate("/login");
       return;
     }
-
-    // For clothing items, check if size is selected
-    if (
-      product.sizeOptions &&
-      product.sizeOptions.length > 0 &&
-      !selectedSize
-    ) {
+    if (product.sizeOptions?.length > 0 && !selectedSize) {
       alert("Please select a size");
       return;
     }
-
     const cartItem = {
       ...product,
       quantity,
       selectedSize: selectedSize || null,
     };
-
     addToCart(cartItem);
   };
 
@@ -82,28 +80,19 @@ function ProductDetail() {
       navigate("/login");
       return;
     }
-
-    // For clothing items, check if size is selected
-    if (
-      product.sizeOptions &&
-      product.sizeOptions.length > 0 &&
-      !selectedSize
-    ) {
+    if (product.sizeOptions?.length > 0 && !selectedSize) {
       alert("Please select a size");
       return;
     }
-
     const cartItem = {
       ...product,
       quantity,
       selectedSize: selectedSize || null,
     };
-
     addToCart(cartItem);
     navigate("/cart");
   };
 
-  // Calculate discount if there's an original price
   const getDiscountPercentage = () => {
     if (product.originalPrice) {
       return Math.round(
@@ -114,7 +103,7 @@ function ProductDetail() {
   };
 
   return (
-    <div className="product-detail-page">
+    <div className="Product-detail-page">
       {/* Breadcrumb Navigation */}
       <div className="breadcrumb">
         <span onClick={() => navigate("/")}>Home</span>
@@ -126,27 +115,40 @@ function ProductDetail() {
         <span>{product.name}</span>
       </div>
 
-      {/* Main Product Section */}
-      <div className="product-detail-container">
-        {/* Left Side - Image */}
-        <div className="product-images">
-          <div className="main-image">
-            <img src={product.img} alt={product.name} />
+      {/* --- MAIN CONTAINER --- */}
+      <div className="Product-detail-container">
+        <div className="Product-images">
+          <div className="Product-image-sticky">
+            <img src={activeImage || product.img} alt={product.name} />
+
+            {product.images && product.images.length > 0 && (
+              <div className="thumbnail-images">
+                {product.images.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`thumb-${index}`}
+                    className={activeImage === img ? "active" : ""}
+                    onClick={() => setActiveImage(img)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right Side - Product Info */}
-        <div className="product-info">
-          <h1 className="product-name">{product.name}</h1>
+        {/* --- RIGHT COLUMN: SCROLLABLE INFO --- */}
+        <div className="Product-info">
+          <h1 className="Product-name">{product.name}</h1>
 
           {/* Rating */}
-          <div className="product-rating">
+          <div className="Product-rating">
             <span className="rating-value">{product.rating} ⭐</span>
             <span className="rating-reviews">({product.reviews} reviews)</span>
           </div>
 
           {/* Price */}
-          <div className="product-pricing">
+          <div className="Product-pricing">
             <span className="current-price">
               ₹{product.price.toLocaleString()}
             </span>
@@ -167,15 +169,8 @@ function ProductDetail() {
             {product.inStock ? "✓ In Stock" : "✗ Out of Stock"}
           </div>
 
-          {/* SubCategory Badge */}
-          {product.subCategory && (
-            <div className="product-subcategory">
-              <span>Category: {product.subCategory}</span>
-            </div>
-          )}
-
-          {/* Size Selection (for clothing) */}
-          {product.sizeOptions && product.sizeOptions.length > 0 && (
+          {/* Size Selection */}
+          {product.sizeOptions?.length > 0 && (
             <div className="size-selection">
               <label>Select Size:</label>
               <div className="size-options">
@@ -214,7 +209,7 @@ function ProductDetail() {
           </div>
 
           {/* Action Buttons */}
-          <div className="product-actions">
+          <div className="Product-actions">
             <button
               className="add-to-cart-btn"
               onClick={handleAddToCart}
@@ -253,59 +248,40 @@ function ProductDetail() {
           </div>
 
           {/* Product Description */}
-          <div className="product-description">
+          <div className="Product-description">
             <h3>Product Description</h3>
             <p>
               {product.description ||
-                `${product.name} - High-quality product with excellent features and durability. Perfect for your needs with premium materials and craftsmanship.`}
+                `${product.name} - High-quality product with excellent features and durability.`}
             </p>
           </div>
 
-          <div className="product-features">
+          <div className="Product-features">
             <h3>Key Features</h3>
             <ul>
-              {product.category === "clothing" ? (
-                <>
-                  <li>Premium quality fabric</li>
-                  <li>Comfortable fit</li>
-                  <li>Machine washable</li>
-                  <li>Available in multiple sizes</li>
-                  <li>Durable and long-lasting</li>
-                </>
-              ) : (
-                <>
-                  <li>Latest technology</li>
-                  <li>Energy efficient</li>
-                  <li>Warranty included</li>
-                  <li>Easy to use</li>
-                  <li>High performance</li>
-                </>
-              )}
+              {(
+                ProductFeatures[product.category] || ProductFeatures.electronics
+              ).map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
             </ul>
-          </div>
-
-          {/* Product Badges */}
-          <div className="product-badges">
-            {product.isFeatured && (
-              <span className="badge featured">Featured</span>
-            )}
-            {product.isNewArrival && (
-              <span className="badge new-arrival">New Arrival</span>
-            )}
           </div>
         </div>
       </div>
 
       {/* Related Products Section */}
       {relatedProducts.length > 0 && (
-        <div className="related-products-section">
+        <div className="related-Products-section">
           <h2>You May Also Like</h2>
-          <div className="related-products-grid">
+          <div className="related-Products-grid">
             {relatedProducts.map((item) => (
               <div
                 key={item.id}
-                className="related-product-card"
-                onClick={() => navigate(`/product/${item.id}`)}
+                className="related-Product-card"
+                onClick={() => {
+                  navigate(`/product/${item.id}`);
+                  window.scrollTo(0, 0);
+                }}
               >
                 <img src={item.img} alt={item.name} />
                 <h4>{item.name}</h4>

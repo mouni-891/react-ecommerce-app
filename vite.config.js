@@ -17,4 +17,8 @@ export default defineConfig({
       "@data": path.resolve(__dirname, "./src/Ecommerce/data"),
     },
   },
+  server: {
+    host: true,
+    port: 5173,
+  },
 });

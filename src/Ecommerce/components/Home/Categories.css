@@ -54,7 +54,7 @@
 
 .category-name {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: #333;
   transition: color 0.3s ease;
 }
@@ -115,7 +115,7 @@
   }
 
   .category-name {
-    font-size: 12px;
+    font-size: 18px;
   }
   
 }
@@ -139,6 +139,7 @@
     min-width: 80px;
     padding: 10px 12px;
     flex-shrink: 0;
+
   }
 
   .category-icon-wrapper {

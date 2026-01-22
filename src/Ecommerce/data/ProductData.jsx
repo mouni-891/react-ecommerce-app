@@ -4,7 +4,8 @@ const ProductData = [
     id: "CL001",
     name: "Men Solid Casual Cotton Shirt",
     img: "/hotPicks-images/clothing/menShirt.png",
-    price: 1119,
+    price: 999,
+    originalPrice: 1119,
     currency: "INR",
     rating: 4.0,
     reviews: 320,
@@ -20,6 +21,7 @@ const ProductData = [
     name: "Women Rayon Straight Kurti Top",
     img: "/hotPicks-images/clothing/womenTop.png",
     price: 250,
+    originalPrice: 390,
     currency: "INR",
     rating: 3.5,
     reviews: 210,
@@ -581,6 +583,7 @@ const ProductData = [
     price: 699,
     currency: "INR",
     rating: 4.2,
+
     reviews: 800,
     category: "men",
     subCategory: "T-Shirts",
@@ -637,7 +640,7 @@ const ProductData = [
 
   {
     id: "MEN013",
-    name: "Innerwear Vests (Pack of 3)",
+    name: "Innerwear Vests (Pack of 2)",
     img: "/Categories/men/vests.png",
     price: 499,
     currency: "INR",
