@@ -259,9 +259,10 @@ function ProductDetail() {
           <div className="Product-features">
             <h3>Key Features</h3>
             <ul>
-              {(
-                ProductFeatures[product.category] || ProductFeatures.electronics
-              ).map((feature, index) => (
+              {(product.keyFeatures?.length
+                ? product.keyFeatures
+                : ProductFeatures[product.category]
+              )?.map((feature, index) => (
                 <li key={index}>{feature}</li>
               ))}
             </ul>
