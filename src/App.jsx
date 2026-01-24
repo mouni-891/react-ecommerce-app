@@ -11,6 +11,8 @@ import { WishlistProvider } from "@context/WishlistContext";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./Ecommerce/auth/ProtectedRoute";
 import ProductDetail from "./Ecommerce/pages/ProductDetail/ProductDetail";
+import BeautyPage from "./Ecommerce/pages/Category/BeautyPage";
+import BeautySubCategoryProducts from "./Ecommerce/pages/Category/BeautySubCategoryProducts";
 
 function App() {
   return (
@@ -34,6 +36,11 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/category/" element={<CategoryPage />} />
               <Route path="/category/:category" element={<CategoryPage />} />
+              <Route path="/category/beauty" element={<BeautyPage />} />
+              <Route
+                path="/category/beauty/:subCategory"
+                element={<BeautySubCategoryProducts />}
+              />
 
               <Route
                 path="/cart"
@@ -53,6 +60,7 @@ function App() {
               />
               <Route path="/login" element={<Login />} />
               <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/product/:slug" element={<ProductDetail />} />
             </Route>
           </Routes>
         </Router>

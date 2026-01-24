@@ -679,6 +679,7 @@ const ProductData = [
     reviews: 280,
     category: "beauty",
     subCategory: "Hair Care",
+    slug: "hair-care",
     keyFeatures: [
       "Provides deep conditioning and softness",
       "Helps reduce tangles and breakage",
@@ -699,6 +700,7 @@ const ProductData = [
     reviews: 190,
     category: "beauty",
     subCategory: "Hair Care",
+    slug: "hair-care",
     keyFeatures: [
       "Delivers rich and long-lasting color",
       "Provides even coverage for grey hair",
@@ -719,6 +721,7 @@ const ProductData = [
     reviews: 240,
     category: "beauty",
     subCategory: "Hair Care",
+    slug: "hair-care",
     keyFeatures: [
       "Deeply nourishes damaged hair",
       "Repairs dryness and split ends",
@@ -915,7 +918,7 @@ const ProductData = [
   {
     id: "BEAUTY_MG_01",
     name: "Beard Styling Comb",
-    img: "/Categories/beauty/MenGromming/beardcomb.png",
+    img: "/Categories/beauty/MenGrooming/beardcomb.png",
     price: 199,
     currency: "INR",
     rating: 4.2,
@@ -936,7 +939,7 @@ const ProductData = [
   {
     id: "BEAUTY_MG_02",
     name: "Nourishing Beard Oil",
-    img: "/Categories/beauty/MenGromming/beardoil.png",
+    img: "/Categories/beauty/MenGrooming/beardoil.png",
     price: 499,
     currency: "INR",
     rating: 4.5,
@@ -957,7 +960,7 @@ const ProductData = [
   {
     id: "BEAUTY_MG_03",
     name: "Refreshing Men Face Wash",
-    img: "/Categories/beauty/MenGromming/facewash.png",
+    img: "/Categories/beauty/MenGrooming/facewash.png",
     price: 249,
     currency: "INR",
     rating: 4.3,
@@ -978,7 +981,7 @@ const ProductData = [
   {
     id: "BEAUTY_MG_04",
     name: "Men Hair Styling Comb",
-    img: "/Categories/beauty/MenGromming/mencomb.png",
+    img: "/Categories/beauty/MenGrooming/mencomb.png",
     price: 149,
     currency: "INR",
     rating: 4.1,
@@ -999,7 +1002,7 @@ const ProductData = [
   {
     id: "BEAUTY_MG_05",
     name: "Flexible Hold Hair Gel",
-    img: "/Categories/beauty/MenGromming/mengel.png",
+    img: "/Categories/beauty/MenGrooming/mengel.png",
     price: 299,
     currency: "INR",
     rating: 4.2,
@@ -1020,7 +1023,7 @@ const ProductData = [
   {
     id: "BEAUTY_MG_06",
     name: "Daily Care Men Shampoo",
-    img: "/Categories/beauty/MenGromming/menshampoo.png",
+    img: "/Categories/beauty/MenGrooming/menshampoo.png",
     price: 349,
     currency: "INR",
     rating: 4.4,
