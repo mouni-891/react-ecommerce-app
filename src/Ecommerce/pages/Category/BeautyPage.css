@@ -3,11 +3,11 @@
   margin: 0 auto;
   padding: 20px;
   min-height: 100vh;
-  background-color: #fff5f8; /* soft pink background */
+  background-color: #fff5f8;
 }
 
 .beauty-main h1 {
-  font-size: 28px;
+  font-size: clamp(24px, 5vw, 28px);
   color: #ff4081;
   margin-bottom: 25px;
   text-align: center;
@@ -17,16 +17,18 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 25px;
+  padding: 10px 0;
 }
 
 .beauty-card {
   background: #fff;
   border-radius: 12px;
-  padding: 15px;
+  padding: 20px; /* Slightly more padding */
   text-align: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
+  outline: none; /* For accessibility */
 }
 
 .beauty-card:hover {
@@ -43,4 +45,40 @@
 .beauty-card h3 {
   font-size: 16px;
   color: #333;
+}
+
+.beauty-card:hover,
+.beauty-card:focus {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 64, 129, 0.2); /* Pink glow on hover/focus */
+}
+
+.beauty-card img {
+  width: 100%;
+  height: 150px; /* Fixed aspect for consistency */
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.beauty-card h3 {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+}
+
+/* Mobile-first responsive adjustments */
+@media (max-width: 768px) {
+  .beauty-main {
+    padding: 15px;
+  }
+
+  .beauty-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+  }
+
+  .beauty-card {
+    padding: 15px;
+  }
 }
