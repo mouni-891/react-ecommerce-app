@@ -1,16 +1,102 @@
-# React + Vite
+🛒 MERN E-Commerce Web Application
+Full-stack MERN e-commerce platform with user authentication, product browsing, cart, and wishlist. Frontend live, backend with MongoDB integration in progress.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+✨ Features
+👤 User (✅ Implemented)
+Homepage: Header, Hero Carousel, Hot Picks, Categories
 
-Currently, two official plugins are available:
+Header: Login, Cart, Wishlist navigation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Pages: Home, Account, Category, Login/Register, Product Detail, Wishlist
 
-## React Compiler
+Cart functionality (add/remove/update)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🛠️ User (🔄 In Progress)
 
-## Expanding the ESLint configuration
+Place orders & order history
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+🛠️ Admin (🚀 Upcoming)
+
+-> Admin dashboard & login
+
+-> Product CRUD operations
+
+-> User & order management
+
+🧱 Tech Stack
+Frontend: React.js, HTML5/CSS3, JavaScript (ES6+), Axios
+Backend: Node.js, Express.js, MongoDB, JWT Authentication
+
+
+📁 Project Structure
+mern-ecommerce/
+├── frontend/src/
+│   ├── auth/ (AuthContext, ProtectedRoute)
+│   ├── components/ (Header, HeroCarousel, HotPicks, Categories)
+│   ├── context/ (CartContext, WishlistContext)
+│   ├── pages/ (Home, Account, Category, Login, ProductDetail, Wishlist)
+│   └── App.jsx
+├── backend/src/
+│   ├── config/, controllers/, models/, routes/
+└── .env, package.json
+
+
+⚙️ Setup Instructions
+**Backend**
+
+bash
+
+cd backend
+
+npm install
+
+npm run dev  # http://localhost:8000
+
+
+**Frontend**
+
+bash
+
+cd frontend
+
+npm install
+
+npm start    # http://localhost:3000
+
+
+Environment Variables (backend/.env):
+PORT=8000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+
+🔐 Authentication Flow (Planned)
+JWT token on login/register
+
+LocalStorage token persistence
+
+Protected routes with middleware
+
+📌 Roadmap
+
+ -> Frontend UI & routing
+
+ -> MongoDB + full API integration
+
+ -> Cart & order system
+
+ -> Payment gateway (Razorpay/Stripe)
+
+ -> Product reviews & ratings
+
+ -> Admin dashboard
+
+👩‍💻 Author
+Mounika -
+BCA Graduate | Full-Stack Developer | HR Enthusiast |
+LinkedIn - https://www.linkedin.com/in/yatam-mounika
+
+📄 License
+MIT License - For learning & demonstration purposes.
+
+Repository: GitHub - https://github.com/mouni-891/react-ecommerce-app.git
