@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ProductData from "@/data/ProductData";
-import {useCart} from "@/context/CartContext.jsx"
+import { useCart } from "@/context/CartContext.jsx";
 import { useWishlist } from "@/context/WishlistContext.jsx";
 import { useAuth } from "@/auth/AuthContext";
 import ProductFeatures from "./ProductFeatures";
@@ -16,22 +16,21 @@ function ProductDetail() {
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
-  // State to handle changing the main image when a thumbnail is clicked
   const [activeImage, setActiveImage] = useState(null);
 
-  // Scroll to top when component mounts
+  // Scroll to top on mount or product change
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [slugOrId]);
 
-  const product = ProductData.find(item => item.slug === slugOrId || item.id === slugOrId);
+  const product = ProductData.find(
+    (item) => item.slug === slugOrId || item.id === slugOrId
+  );
 
   // Set default size and image
   useEffect(() => {
     if (product) {
-      if (product.sizeOptions?.length > 0) {
-        setSelectedSize(product.sizeOptions[0]);
-      }
+      setSelectedSize(product.sizeOptions?.[0] || "");
       setActiveImage(product.img);
     }
   }, [product]);
@@ -45,58 +44,55 @@ function ProductDetail() {
     );
   }
 
-  // Related products logic
+  // Related products (up to 4)
   const relatedProducts = ProductData.filter(
-    (item) => item.category === product.category && item.id !== product.id,
+    (item) => item.category === product.category && item.id !== product.id
   ).slice(0, 4);
 
   const handleQuantityChange = (type) => {
-    if (type === "increase") {
-      setQuantity((prev) => prev + 1);
-    } else if (type === "decrease" && quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
+    setQuantity((prev) =>
+      type === "increase" ? prev + 1 : prev > 1 ? prev - 1 : prev
+    );
   };
 
+  // Prepare cart item
+  const prepareCartItem = () => ({
+    ...product,
+    quantity,
+    selectedSize: selectedSize || null,
+  });
+
+  // Unified Add to Cart / Go to Cart
   const handleAddToCart = () => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+    if (!user) return navigate("/login");
+
     if (product.sizeOptions?.length > 0 && !selectedSize) {
-      alert("Please select a size");
-      return;
+      return alert("Please select a size");
     }
-    const cartItem = {
-      ...product,
-      quantity,
-      selectedSize: selectedSize || null,
-    };
-    addToCart(cartItem);
+
+    if (isInCart(product.id)) {
+      return navigate("/cart"); // Go to cart if already added
+    }
+
+    addToCart(prepareCartItem());
   };
 
+  // Buy Now -> Add to Cart and go to cart
   const handleBuyNow = () => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+    if (!user) return navigate("/login");
+
     if (product.sizeOptions?.length > 0 && !selectedSize) {
-      alert("Please select a size");
-      return;
+      return alert("Please select a size");
     }
-    const cartItem = {
-      ...product,
-      quantity,
-      selectedSize: selectedSize || null,
-    };
-    addToCart(cartItem);
+
+    if (!isInCart(product.id)) addToCart(prepareCartItem());
     navigate("/cart");
   };
 
   const getDiscountPercentage = () => {
     if (product.originalPrice) {
       return Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100,
+        ((product.originalPrice - product.price) / product.originalPrice) * 100
       );
     }
     return null;
@@ -104,30 +100,33 @@ function ProductDetail() {
 
   return (
     <div className="Product-detail-page">
-      {/* Breadcrumb Navigation */}
+      {/* Breadcrumb */}
       <div className="breadcrumb">
         <span onClick={() => navigate("/")}>Home</span>
         <span> / </span>
-        <span onClick={() => navigate(`/category/${product.category}`)}>
+        <span
+          onClick={() => navigate(`/category/${product.category}`)}
+        >
           {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
         </span>
         <span> / </span>
         <span>{product.name}</span>
       </div>
 
-      {/* --- MAIN CONTAINER --- */}
+      {/* Main Container */}
       <div className="Product-detail-container">
+        {/* Left Column: Images */}
         <div className="Product-images">
           <div className="Product-image-sticky">
             <img src={activeImage || product.img} alt={product.name} />
 
-            {product.images && product.images.length > 0 && (
+            {product.images?.length > 0 && (
               <div className="thumbnail-images">
-                {product.images.map((img, index) => (
+                {product.images.map((img, idx) => (
                   <img
-                    key={index}
+                    key={idx}
                     src={img}
-                    alt={`thumb-${index}`}
+                    alt={`thumb-${idx}`}
                     className={activeImage === img ? "active" : ""}
                     onClick={() => setActiveImage(img)}
                   />
@@ -137,7 +136,7 @@ function ProductDetail() {
           </div>
         </div>
 
-        {/* --- RIGHT COLUMN: SCROLLABLE INFO --- */}
+        {/* Right Column: Info */}
         <div className="Product-info">
           <h1 className="Product-name">{product.name}</h1>
 
@@ -147,11 +146,9 @@ function ProductDetail() {
             <span className="rating-reviews">({product.reviews} reviews)</span>
           </div>
 
-          {/* Price */}
+          {/* Price & Discount */}
           <div className="Product-pricing">
-            <span className="current-price">
-              ₹{product.price.toLocaleString()}
-            </span>
+            <span className="current-price">₹{product.price.toLocaleString()}</span>
             {product.originalPrice && (
               <>
                 <span className="original-price">
@@ -162,9 +159,11 @@ function ProductDetail() {
             )}
           </div>
 
-          {/* Stock Status */}
+          {/* Stock */}
           <div
-            className={`stock-status ${product.inStock ? "in-stock" : "out-of-stock"}`}
+            className={`stock-status ${
+              product.inStock ? "in-stock" : "out-of-stock"
+            }`}
           >
             {product.inStock ? "✓ In Stock" : "✗ Out of Stock"}
           </div>
@@ -177,7 +176,9 @@ function ProductDetail() {
                 {product.sizeOptions.map((size) => (
                   <button
                     key={size}
-                    className={`size-button ${selectedSize === size ? "selected" : ""}`}
+                    className={`size-button ${
+                      selectedSize === size ? "selected" : ""
+                    }`}
                     onClick={() => setSelectedSize(size)}
                   >
                     {size}
@@ -187,7 +188,7 @@ function ProductDetail() {
             </div>
           )}
 
-          {/* Quantity Selector */}
+          {/* Quantity */}
           <div className="quantity-selection">
             <label>Quantity:</label>
             <div className="quantity-controls">
@@ -229,10 +230,7 @@ function ProductDetail() {
             <button
               className="wishlist-btn-detail"
               onClick={() => {
-                if (!user) {
-                  navigate("/login");
-                  return;
-                }
+                if (!user) return navigate("/login");
                 toggleWishlist(product);
               }}
             >
@@ -247,7 +245,7 @@ function ProductDetail() {
             </button>
           </div>
 
-          {/* Product Description */}
+          {/* Description */}
           <div className="Product-description">
             <h3>Product Description</h3>
             <p>
@@ -256,21 +254,22 @@ function ProductDetail() {
             </p>
           </div>
 
+          {/* Key Features */}
           <div className="Product-features">
             <h3>Key Features</h3>
             <ul>
               {(product.keyFeatures?.length
                 ? product.keyFeatures
                 : ProductFeatures[product.category]
-              )?.map((feature, index) => (
-                <li key={index}>{feature}</li>
+              )?.map((feature, idx) => (
+                <li key={idx}>{feature}</li>
               ))}
             </ul>
           </div>
         </div>
       </div>
 
-      {/* Related Products Section */}
+      {/* Related Products */}
       {relatedProducts.length > 0 && (
         <div className="related-Products-section">
           <h2>You May Also Like</h2>

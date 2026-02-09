@@ -92,6 +92,16 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }, [cartItems]);
 
+  const addToCartOnce = useCallback((product) => {
+    if (!product || !product.id) return;
+
+    setCartItems((prev) => {
+      const exists = prev.find((item) => item.id === product.id);
+      if (exists) return prev;
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  }, []);
+
   const value = useMemo(
     () => ({
       cartItems,

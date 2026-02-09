@@ -1,12 +1,9 @@
 import { useCart } from "@/context/CartContext";
 
 function CartSummary() {
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, getTotalPrice, clearCart } = useCart();
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
+  const subtotal = getTotalPrice();
 
   const tax = subtotal * 0.18;
   const total = subtotal + tax;
