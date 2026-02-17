@@ -52,7 +52,7 @@ export const CartProvider = ({ children }) => {
     if (alreadyInCart) {
       toast.success("Quantity updated");
     } else {
-      toast.success("Added to cart");
+      
     }
   }, []);
 

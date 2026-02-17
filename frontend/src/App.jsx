@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import HomePage from "@/HomePage/HomePage";
 import CategoryPage from "@/pages/Home/CategoryPage";
@@ -15,49 +15,59 @@ import ProductDetail from "@/pages/ProductDetail/ProductDetail";
 import BeautyPage from "@/pages/Category/BeautyPage";
 import BeautySubCategoryProducts from "@/pages/Category/BeautySubCategoryProducts";
 import MyAccount from "@/pages/Account/MyAccount";
+import About from "@/pages/About/About";
+import Contact from "@/pages/Contact/Contact";
+import Privacy from "@/pages/Privacy/Privacy";
+import Terms from "@/pages/Terms/Terms";
 
 function App() {
   return (
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
-          <Router>
-            <Toaster
-              position="bottom-center"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  fontSize: "20px",
-                  padding: "14px 20px",
-                  backgroundColor: "#39397a",
-                  color: "white",
-                },
-              }}
-            />
-            <Routes>
-              {/* Routes WITH Layout (Header visible) */}
-              <Route element={<Layout />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/category/:category?" element={<CategoryPage />} />
-                <Route path="/category/beauty" element={<BeautyPage />} />
-                <Route
-                  path="/category/beauty/:subCategory"
-                  element={<BeautySubCategoryProducts />}
-                />
-                <Route path="/product/:slugOrId" element={<ProductDetail />} />
 
-                {/* Protected Routes - Nested under ProtectedRoute */}
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/cart" element={<CartPage />} />
-                  <Route path="/wishlist" element={<WishlistPage />} />
-                  <Route path="/account" element={<MyAccount />} />
-                </Route>
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                fontSize: "20px",
+                padding: "14px 20px",
+                backgroundColor: "#39397a",
+                color: "white",
+              },
+            }}
+          />
+
+          <Routes>
+            <Route element={<Layout />}>
+
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+
+              <Route path="/category/:category?" element={<CategoryPage />} />
+              <Route path="/category/beauty" element={<BeautyPage />} />
+              <Route
+                path="/category/beauty/:subCategory"
+                element={<BeautySubCategoryProducts />}
+              />
+              <Route path="/product/:slugOrId" element={<ProductDetail />} />
+
+              <Route element={<ProtectedRoute />}>
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/wishlist" element={<WishlistPage />} />
+                <Route path="/account" element={<MyAccount />} />
               </Route>
 
-              {/* Routes WITHOUT Layout (no Header) */}
-              <Route path="/login" element={<Login />} />
-            </Routes>
-          </Router>
+            </Route>
+
+            <Route path="/login" element={<Login />} />
+
+          </Routes>
+
         </WishlistProvider>
       </CartProvider>
     </AuthProvider>

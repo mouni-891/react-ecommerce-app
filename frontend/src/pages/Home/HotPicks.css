@@ -1,6 +1,6 @@
 .hot-picks-container {
   padding: 40px 60px;
-  background: #f8f9fa;
+  background: #fafbfc;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -13,7 +13,7 @@
   margin: 0;
   padding: 0;
   width: 100%;
-  align-items: stretch; /* Changed from flex-start to stretch */
+  align-items: stretch; 
 }
 
 .category-card {
@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 100%; /* Ensure equal height */
+  min-height: 100%; 
 }
 
 .category-card:hover {
@@ -45,8 +45,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   align-items: stretch;
-  flex-grow: 1; /* Allow grid to grow and push button down */
-  margin-bottom: 20px; /* Space between grid and button */
+  flex-grow: 1; 
+  margin-bottom: 20px; 
 }
 
 .product-card {
@@ -62,7 +62,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 280px; /* Ensures consistent card height */
+  min-height: 280px; 
 }
 
 .product-image-wrapper img {
@@ -82,7 +82,7 @@
   height: 180px;
   object-fit: contain;
   margin-bottom: 12px;
-  flex-shrink: 0; /* Prevent image from shrinking */
+  flex-shrink: 0; 
 }
 
 .product-name {
@@ -90,7 +90,7 @@
   color: #212121;
   text-align: left;
   margin-bottom: 8px;
-  min-height: 40px; /* Fixed height for 2 lines */
+  min-height: 40px;
   margin-top: auto;
   font-size: 14px;
   line-height: 1.4;
@@ -111,9 +111,9 @@
 .explore-btn {
   width: 100%;
   margin: 0;
-  margin-top: auto; /* Push button to bottom */
+  margin-top: auto; 
   padding: 14px 12px;
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  background: linear-gradient(135deg, #341b7d 0%, #5a38e2 100%);
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -125,9 +125,9 @@
 }
 
 .explore-btn:hover {
-  background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+  background: linear-gradient(135deg, #8257d6 0%, #20027d 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(106, 52, 234, 0.3);
 }
 
 .explore-btn:active {
