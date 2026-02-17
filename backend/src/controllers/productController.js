@@ -1,4 +1,4 @@
-import Product from "../models/productModel.js"; // Mongoose model
+import Product from "../models/productModel.js";
 import asyncHandler from "express-async-handler";
 
 // @desc    Get all products
@@ -15,7 +15,6 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProductById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  // Try to find by _id first, if invalid, try slug
   let product;
   if (id.match(/^[0-9a-fA-F]{24}$/)) {
     product = await Product.findById(id);
@@ -36,22 +35,7 @@ const getProductById = asyncHandler(async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-  const newProduct = new Product({
-    name: req.body.name,
-    slug: req.body.slug,
-    category: req.body.category,
-    price: req.body.price,
-    originalPrice: req.body.originalPrice || req.body.price,
-    description: req.body.description || "",
-    img: req.body.img,
-    images: req.body.images || [],
-    sizeOptions: req.body.sizeOptions || [],
-    rating: req.body.rating || 0,
-    reviews: req.body.reviews || 0,
-    inStock: req.body.inStock !== undefined ? req.body.inStock : true,
-    keyFeatures: req.body.keyFeatures || [],
-  });
-
+  const newProduct = new Product(req.body);
   const createdProduct = await newProduct.save();
   res.status(201).json(createdProduct);
 });
@@ -63,7 +47,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    Object.assign(product, req.body); // update all fields from request
+    Object.assign(product, req.body);
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } else {
@@ -87,10 +71,5 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
-export {
-  getProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-};
+// ✅ Make sure to export all functions correctly
+export { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
