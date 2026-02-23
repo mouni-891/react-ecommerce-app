@@ -1,185 +1,158 @@
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import ProductData from "@/data/ProductData";
-import { useCart } from "@/context/CartContext.jsx";
-import { useWishlist } from "@/context/WishlistContext.jsx";
-import { useAuth } from "@/auth/AuthContext";
-import ProductFeatures from "./ProductFeatures";
-import "./ProductDetail.css";
 
-function ProductDetail() {
-  const { slugOrId } = useParams();
+const ProductDetail = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { addToCart, isInCart } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishlist();
 
-  const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("");
+  const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [activeImage, setActiveImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Scroll to top on mount or product change
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const getImageUrl = (path) => {
+    if (!path) return "/placeholder.jpg";
+    return `${API_URL}${path}`;
+  };
+
+  // Fetch product by _id
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [slugOrId]);
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`${API_URL}/api/products/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch product");
+        const data = await res.json();
+        setProduct(data);
+        setActiveImage(data.img);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const product = ProductData.find(
-    (item) => item.slug === slugOrId || item.id === slugOrId
-  );
+    fetchProduct();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id, API_URL]);
 
-  // Set default size and image
+  // Fetch related products once category is known
   useEffect(() => {
-    if (product) {
-      setSelectedSize(product.sizeOptions?.[0] || "");
-      setActiveImage(product.img);
-    }
-  }, [product]);
+    if (!product?.category) return;
 
-  if (!product) {
-    return (
-      <div className="Product-not-found">
-        <h2>Product not found</h2>
-        <button onClick={() => navigate("/")}>Go to Home</button>
-      </div>
-    );
-  }
+    const fetchRelated = async () => {
+      try {
+        const res = await fetch(
+          `${API_URL}/api/products?category=${product.category}`
+        );
+        const data = await res.json();
+        // Exclude current product, show up to 4
+        setRelatedProducts(
+          data.filter((item) => item._id !== product._id).slice(0, 4)
+        );
+      } catch (err) {
+        console.error("Related fetch error:", err);
+      }
+    };
 
-  // Related products (up to 4)
-  const relatedProducts = ProductData.filter(
-    (item) => item.category === product.category && item.id !== product.id
-  ).slice(0, 4);
+    fetchRelated();
+  }, [product, API_URL]);
 
-  const handleQuantityChange = (type) => {
-    setQuantity((prev) =>
-      type === "increase" ? prev + 1 : prev > 1 ? prev - 1 : prev
-    );
-  };
+  if (loading) return <h2 style={{ padding: "40px" }}>Loading...</h2>;
+  if (error) return <h2 style={{ padding: "40px" }}>Error: {error}</h2>;
+  if (!product) return <h2 style={{ padding: "40px" }}>Product not found</h2>;
 
-  // Prepare cart item
-  const prepareCartItem = () => ({
-    ...product,
-    quantity,
-    selectedSize: selectedSize || null,
-  });
-
-  // Unified Add to Cart / Go to Cart
-  const handleAddToCart = () => {
-    if (!user) return navigate("/login");
-
-    if (product.sizeOptions?.length > 0 && !selectedSize) {
-      return alert("Please select a size");
-    }
-
-    if (isInCart(product.id)) {
-      return navigate("/cart"); // Go to cart if already added
-    }
-
-    addToCart(prepareCartItem());
-  };
-
-  // Buy Now -> Add to Cart and go to cart
-  const handleBuyNow = () => {
-    if (!user) return navigate("/login");
-
-    if (product.sizeOptions?.length > 0 && !selectedSize) {
-      return alert("Please select a size");
-    }
-
-    if (!isInCart(product.id)) addToCart(prepareCartItem());
-    navigate("/cart");
-  };
-
-  const getDiscountPercentage = () => {
-    if (product.originalPrice) {
-      return Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100
-      );
-    }
-    return null;
-  };
+  // Combine main image + additional images, remove duplicates
+  const allImages = [...new Set([product.img, ...(product.images || [])])];
 
   return (
-    <div className="Product-detail-page">
-      {/* Breadcrumb */}
-      <div className="breadcrumb">
-        <span onClick={() => navigate("/")}>Home</span>
-        <span> / </span>
-        <span
-          onClick={() => navigate(`/category/${product.category}`)}
-        >
-          {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
-        </span>
-        <span> / </span>
-        <span>{product.name}</span>
-      </div>
+    <div style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto" }}>
+      <div style={{ display: "flex", gap: "40px", flexWrap: "wrap" }}>
 
-      {/* Main Container */}
-      <div className="Product-detail-container">
-        {/* Left Column: Images */}
-        <div className="Product-images">
-          <div className="Product-image-sticky">
-            <img src={activeImage || product.img} alt={product.name} />
+        {/* Left: Images */}
+        <div>
+          <img
+            src={getImageUrl(activeImage)}
+            alt={product.name}
+            style={{
+              width: "400px",
+              borderRadius: "10px",
+              objectFit: "cover",
+              border: "1px solid #eee",
+            }}
+            onError={(e) => (e.target.src = "/placeholder.jpg")}
+          />
 
-            {product.images?.length > 0 && (
-              <div className="thumbnail-images">
-                {product.images.map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt={`thumb-${idx}`}
-                    className={activeImage === img ? "active" : ""}
-                    onClick={() => setActiveImage(img)}
-                  />
-                ))}
-              </div>
-            )}
+          <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+            {allImages.map((img, index) => (
+              <img
+                key={index}
+                src={getImageUrl(img)}
+                alt={`thumb-${index}`}
+                style={{
+                  width: "70px",
+                  height: "70px",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                  borderRadius: "6px",
+                  border: activeImage === img ? "2px solid purple" : "2px solid #ddd",
+                }}
+                onClick={() => setActiveImage(img)}
+                onError={(e) => (e.target.src = "/placeholder.jpg")}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Right Column: Info */}
-        <div className="Product-info">
-          <h1 className="Product-name">{product.name}</h1>
+        {/* Right: Info */}
+        <div style={{ flex: 1, minWidth: "280px" }}>
+          <p style={{ color: "#888", textTransform: "capitalize" }}>
+            {product.category} {product.subCategory ? `› ${product.subCategory}` : ""}
+          </p>
 
-          {/* Rating */}
-          <div className="Product-rating">
-            <span className="rating-value">{product.rating} ⭐</span>
-            <span className="rating-reviews">({product.reviews} reviews)</span>
+          <h1 style={{ margin: "8px 0" }}>{product.name}</h1>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "8px 0" }}>
+            <span style={{ color: "#f5a623", fontWeight: "bold" }}>
+              ★ {product.rating}
+            </span>
+            <span style={{ color: "#888" }}>({product.reviews} reviews)</span>
           </div>
 
-          {/* Price & Discount */}
-          <div className="Product-pricing">
-            <span className="current-price">₹{product.price.toLocaleString()}</span>
+          <div style={{ margin: "12px 0" }}>
+            <span style={{ fontSize: "28px", fontWeight: "bold", color: "purple" }}>
+              ₹{product.price?.toLocaleString()}
+            </span>
             {product.originalPrice && (
-              <>
-                <span className="original-price">
-                  ₹{product.originalPrice.toLocaleString()}
-                </span>
-                <span className="discount">{getDiscountPercentage()}% OFF</span>
-              </>
+              <span style={{ marginLeft: "12px", color: "#888", textDecoration: "line-through" }}>
+                ₹{product.originalPrice?.toLocaleString()}
+              </span>
+            )}
+            {product.originalPrice && (
+              <span style={{ marginLeft: "8px", color: "green", fontWeight: "bold" }}>
+                {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off
+              </span>
             )}
           </div>
 
-          {/* Stock */}
-          <div
-            className={`stock-status ${
-              product.inStock ? "in-stock" : "out-of-stock"
-            }`}
-          >
-            {product.inStock ? "✓ In Stock" : "✗ Out of Stock"}
-          </div>
-
-          {/* Size Selection */}
+          {/* Size Options */}
           {product.sizeOptions?.length > 0 && (
-            <div className="size-selection">
-              <label>Select Size:</label>
-              <div className="size-options">
+            <div style={{ margin: "16px 0" }}>
+              <p style={{ fontWeight: "bold", marginBottom: "8px" }}>Select Size:</p>
+              <div style={{ display: "flex", gap: "10px" }}>
                 {product.sizeOptions.map((size) => (
                   <button
                     key={size}
-                    className={`size-button ${
-                      selectedSize === size ? "selected" : ""
-                    }`}
-                    onClick={() => setSelectedSize(size)}
+                    style={{
+                      padding: "6px 14px",
+                      border: "1px solid #ccc",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      background: "white",
+                    }}
                   >
                     {size}
                   </button>
@@ -188,106 +161,92 @@ function ProductDetail() {
             </div>
           )}
 
-          {/* Quantity */}
-          <div className="quantity-selection">
-            <label>Quantity:</label>
-            <div className="quantity-controls">
-              <button
-                className="qty-btn"
-                onClick={() => handleQuantityChange("decrease")}
-                disabled={quantity <= 1}
-              >
-                -
-              </button>
-              <span className="qty-display">{quantity}</span>
-              <button
-                className="qty-btn"
-                onClick={() => handleQuantityChange("increase")}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="Product-actions">
-            <button
-              className="add-to-cart-btn"
-              onClick={handleAddToCart}
-              disabled={!product.inStock}
-            >
-              {isInCart(product.id) ? "Go to Cart" : "Add to Cart"}
-            </button>
-
-            <button
-              className="buy-now-btn"
-              onClick={handleBuyNow}
-              disabled={!product.inStock}
-            >
-              Buy Now
-            </button>
-
-            <button
-              className="wishlist-btn-detail"
-              onClick={() => {
-                if (!user) return navigate("/login");
-                toggleWishlist(product);
-              }}
-            >
-              <img
-                src={
-                  isInWishlist(product.id)
-                    ? "/wishlist/favorite2.png"
-                    : "/wishlist/favorite.png"
-                }
-                alt="wishlist"
-              />
-            </button>
-          </div>
-
-          {/* Description */}
-          <div className="Product-description">
-            <h3>Product Description</h3>
-            <p>
-              {product.description ||
-                `${product.name} - High-quality product with excellent features and durability.`}
-            </p>
-          </div>
-
           {/* Key Features */}
-          <div className="Product-features">
-            <h3>Key Features</h3>
-            <ul>
-              {(product.keyFeatures?.length
-                ? product.keyFeatures
-                : ProductFeatures[product.category]
-              )?.map((feature, idx) => (
-                <li key={idx}>{feature}</li>
-              ))}
-            </ul>
+          {product.keyFeatures?.length > 0 && (
+            <div style={{ margin: "16px 0" }}>
+              <p style={{ fontWeight: "bold", marginBottom: "8px" }}>Key Features:</p>
+              <ul style={{ paddingLeft: "20px", color: "#555" }}>
+                {product.keyFeatures.map((feature, index) => (
+                  <li key={index} style={{ marginBottom: "4px" }}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Stock Status */}
+          <p style={{ color: product.inStock ? "green" : "red", fontWeight: "bold" }}>
+            {product.inStock ? "✅ In Stock" : "❌ Out of Stock"}
+          </p>
+
+          <div style={{ display: "flex", gap: "15px", marginTop: "24px" }}>
+            <button
+              disabled={!product.inStock}
+              style={{
+                padding: "12px 28px",
+                background: product.inStock ? "purple" : "#ccc",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: product.inStock ? "pointer" : "not-allowed",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+              onClick={() => console.log("Add to cart:", product._id)}
+            >
+              Add to Cart
+            </button>
+
+            <button
+              style={{
+                padding: "12px 28px",
+                background: "transparent",
+                border: "2px solid purple",
+                color: "purple",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+              onClick={() => navigate(-1)}
+            >
+              ← Go Back
+            </button>
           </div>
         </div>
       </div>
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
-        <div className="related-Products-section">
-          <h2>You May Also Like</h2>
-          <div className="related-Products-grid">
+        <div style={{ marginTop: "60px" }}>
+          <h2>Related Products</h2>
+          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", marginTop: "20px" }}>
             {relatedProducts.map((item) => (
               <div
-                key={item.id}
-                className="related-Product-card"
-                onClick={() => {
-                  navigate(`/product/${item.slug}`);
-                  window.scrollTo(0, 0);
+                key={item._id}
+                style={{
+                  border: "1px solid #eee",
+                  padding: "15px",
+                  width: "180px",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
                 }}
+                onClick={() => navigate(`/product/${item._id}`)}
               >
-                <img src={item.img} alt={item.name} />
-                <h4>{item.name}</h4>
-                <p className="related-price">₹{item.price.toLocaleString()}</p>
-                <p className="related-rating">
-                  {item.rating} ⭐ ({item.reviews})
+                <img
+                  src={getImageUrl(item.img)}
+                  alt={item.name}
+                  style={{
+                    width: "100%",
+                    height: "150px",
+                    objectFit: "cover",
+                    borderRadius: "6px",
+                  }}
+                  onError={(e) => (e.target.src = "/placeholder.jpg")}
+                />
+                <h4 style={{ margin: "8px 0 4px", fontSize: "14px" }}>{item.name}</h4>
+                <p style={{ color: "purple", fontWeight: "bold" }}>
+                  ₹{item.price?.toLocaleString()}
                 </p>
               </div>
             ))}
@@ -296,6 +255,6 @@ function ProductDetail() {
       )}
     </div>
   );
-}
+};
 
 export default ProductDetail;

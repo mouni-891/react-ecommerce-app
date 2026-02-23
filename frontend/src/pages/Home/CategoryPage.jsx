@@ -1,48 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { useAuth } from "@/auth/AuthContext";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import toast from "react-hot-toast";
 import "./CategoryPage.css";
 
 function CategoryPage() {
   const { category } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { toggleWishlist, isInWishlist } = useWishlist();
-  const [addedToCart, setAddedToCart] = useState({});
+
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { addToCart, isInCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Fetch all products from backend
-    fetch("http://localhost:5000/api/products")
-      .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(err => console.error(err));
-  }, [category]);
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  // Filter products by category dynamically
-  const filteredProducts = products.filter(item => item.category === category);
+        const res = await fetch(`${API_URL}/api/products?category=${category}`);
 
-  const handleAddToCart = (itemId) => {
-    setAddedToCart(prev => ({ ...prev, [itemId]: true }));
-    setTimeout(() => setAddedToCart(prev => ({ ...prev, [itemId]: false })), 2000);
-  };
+        if (!res.ok) throw new Error("Failed to fetch products");
 
-  const handleWishlistClick = (e, item) => {
-    e.stopPropagation();
-    if (!user) { navigate("/login"); return; }
-    toggleWishlist(item);
-  };
+        const data = await res.json();
 
-  if (filteredProducts.length === 0) {
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [category, API_URL]);
+
+  if (loading) return <h2 className="loading">Loading...</h2>;
+
+  if (error)
+    return (
+      <div className="category-page">
+        <h2>Error: {error}</h2>
+      </div>
+    );
+
+  if (products.length === 0) {
     return (
       <div className="category-page">
         <h1>{category?.toUpperCase()}</h1>
         <div className="category-empty-state">
           <h2>No Products Found</h2>
-          <button className="category-cart-button" onClick={() => navigate('/')}>
+          <button
+            className="category-cart-button"
+            onClick={() => navigate("/")}
+          >
             Browse All Products
           </button>
         </div>
@@ -53,17 +72,69 @@ function CategoryPage() {
   return (
     <div className="category-page">
       <h1>{category?.toUpperCase()}</h1>
+
       <div className="category-products-grid">
-        {filteredProducts.map((item) => (
+        {products.map((item) => (
           <div key={item._id} className="category-product-card">
-            <div onClick={() => navigate(`/product/${item._id}`)}>
-              <img src={item.img} alt={item.name} />
+            <div
+              className="product-img-wrapper"
+              onClick={() => navigate(`/product/${item._id}`)}
+            >
+              <img
+                className="category-product-img"
+                src={`${API_URL}${item.img}`}
+                alt={item.name}
+                onError={(e) => (e.target.src = "/placeholder.jpg")}
+              />
+
+              <button
+                className={`category-wishlist-button ${
+                  isInWishlist(item._id) ? "active" : ""
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const alreadyInWishlist = isInWishlist(item._id);
+                  toggleWishlist(item);
+                  if (alreadyInWishlist) {
+                    toast("Removed from wishlist ❌");
+                  } else {
+                    toast.success("Added to wishlist ❤️");
+                  }
+                }}
+              >
+                {isInWishlist(item._id) ? (
+                  <FaHeart color="red" />
+                ) : (
+                  <FaRegHeart />
+                )}
+              </button>
             </div>
-            <h4 onClick={() => navigate(`/product/${item._id}`)}>{item.name}</h4>
-            <p>₹{item.price.toLocaleString()}</p>
-            <button onClick={() => handleAddToCart(item._id)}>
-              {addedToCart[item._id] ? "✓ Added to Cart" : "Add to Cart"}
-            </button>
+
+            <div className="category-product-content">
+              <h4 className="category-product-name">{item.name}</h4>
+              <p className="category-product-price">
+                ₹{item.price?.toLocaleString()}
+              </p>
+              {item.rating && (
+                <div className="category-product-rating">{item.rating}</div>
+              )}
+
+              <div className="category-product-actions">
+                <button
+                  className="category-cart-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (isInCart(item._id)) {
+                      navigate("/cart");
+                    } else {
+                      addToCart(item);
+                    }
+                  }}
+                >
+                  {isInCart(item._id) ? "Go To Cart" : "Add To Cart"}
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>

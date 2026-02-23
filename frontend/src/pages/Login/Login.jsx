@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/auth/AuthContext";
-import toast from "react-hot-toast";  // ← ADD THIS LINE
+import toast from "react-hot-toast";  
 import "./Login.css";
 
 function Login() {

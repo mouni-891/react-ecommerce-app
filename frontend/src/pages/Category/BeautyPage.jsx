@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import "./BeautyPage.css";
 
 export const beautySubCategories = [ 
-  { name: "Hair Care", slug: "hair-care", img: "/Categories/beauty/haircareimage.png" },
-  { name: "Make Up", slug: "make-up", img: "/Categories/beauty/makeupimage.png" },
-  { name: "Men Grooming", slug: "men-grooming", img: "/Categories/beauty/mengroomingimage.png" },
-  { name: "Perfumes", slug: "perfumes", img: "/Categories/beauty/perfumesimage.png" },
-  { name: "Skin Care", slug: "skin-care", img: "/Categories/beauty/skincareimage.png" },
+  { name: "Hair Care", slug: "hair-care", img: "/images/beauty/haircareimage.png" },
+  { name: "Make Up", slug: "make-up", img: "/images/beauty/makeupimage.png" },
+  { name: "Men Grooming", slug: "men-grooming", img: "/images/beauty/mengroomingimage.png" },
+  { name: "Perfumes", slug: "perfumes", img: "/images/beauty/perfumesimage.png" },
+  { name: "Skin Care", slug: "skin-care", img: "/images/beauty/skincareimage.png" },
 ];
 
 function BeautyPage() {
@@ -35,7 +35,7 @@ function BeautyPage() {
             tabIndex={0}
             aria-label={`Navigate to ${item.name} category`}
           >
-            <img src={item.img} alt={`${item.name} category`} loading="lazy" />
+            <img src={`${import.meta.env.VITE_API_URL}${item.img}`} alt={`${item.name} category`} loading="lazy" />
             <h3>{item.name}</h3>
           </div>
         ))}
