@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import HomePage from "@/HomePage/HomePage";
-import CategoryPage from "@/pages/Home/CategoryPage";
 import Layout from "@/components/Layout/Layout";
 import CartPage from "@/Cart/CartPage";
 import WishlistPage from "@/pages/Wishlist/WishlistPage";
@@ -19,13 +18,14 @@ import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
 import Privacy from "@/pages/Privacy/Privacy";
 import Terms from "@/pages/Terms/Terms";
+import CategoryPage from "@/pages/Home/CategoryPage";
+
 
 function App() {
   return (
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
-
           <Toaster
             position="bottom-center"
             toastOptions={{
@@ -41,7 +41,6 @@ function App() {
 
           <Routes>
             <Route element={<Layout />}>
-
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
@@ -61,13 +60,11 @@ function App() {
                 <Route path="/wishlist" element={<WishlistPage />} />
                 <Route path="/account" element={<MyAccount />} />
               </Route>
-
             </Route>
 
             <Route path="/login" element={<Login />} />
-
+            <Route path="*" element={<h2>404 Not Found</h2>} />
           </Routes>
-
         </WishlistProvider>
       </CartProvider>
     </AuthProvider>

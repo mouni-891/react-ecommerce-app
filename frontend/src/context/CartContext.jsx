@@ -29,20 +29,19 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = useCallback((product) => {
-    if (!product || !product.id) {
-      console.error("Invalid product:", product);
+    if (!product || !product._id) {
       toast.error("Something went wrong. Try again.");
       return;
     }
 
     let alreadyInCart = false;
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+      const existing = prev.find((item) => item._id === product._id);
 
       if (existing) {
         alreadyInCart = true;
         return prev.map((item) =>
-          item.id === product.id
+          item._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
@@ -52,24 +51,24 @@ export const CartProvider = ({ children }) => {
     if (alreadyInCart) {
       toast.success("Quantity updated");
     } else {
-      
+      toast.success("Item added to cart 🛒");
     }
   }, []);
 
   const removeFromCart = useCallback((productId) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== productId));
+    setCartItems((prev) => prev.filter((item) => item._id !== productId));
     toast("Item removed from cart", { icon: "🗑️" });
   }, []);
 
   const updateQuantity = useCallback((productId, quantity) => {
     if (quantity <= 0) {
-      setCartItems((prev) => prev.filter((item) => item.id !== productId));
+      setCartItems((prev) => prev.filter((item) => item._id !== productId));
       return;
     }
 
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === productId ? { ...item, quantity } : item,
+        item._id === productId ? { ...item, quantity } : item,
       ),
     );
   }, []);
@@ -80,7 +79,7 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   const isInCart = useCallback(
-    (productId) => cartItems.some((item) => item.id === productId),
+    (productId) => cartItems.some((item) => item._id === productId),
     [cartItems],
   );
 
@@ -93,10 +92,10 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCartOnce = useCallback((product) => {
-    if (!product || !product.id) return;
+    if (!product || !product._id) return;
 
     setCartItems((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
+      const exists = prev.find((item) => item._id === product._id);
       if (exists) return prev;
       return [...prev, { ...product, quantity: 1 }];
     });

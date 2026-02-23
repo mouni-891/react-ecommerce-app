@@ -3,6 +3,7 @@ import HeroCarousel from "@/pages/Home/HeroCarousel";
 import "./HomePage.css";
 import "@/Header/Header.css";
 import "@/pages/Home/Categories.css";
+import "@/pages/Home/HotPicks.css";
 import React from "react";
 import HotPicks from "@/pages/Home/HotPicks";
 import DealsOfTheDay from "@/pages/Home/DealsOfTheDay";

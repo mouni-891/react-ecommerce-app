@@ -35,7 +35,7 @@ const WishlistPage = () => {
 
       <div className="wishlist-grid">
         {wishlist.map((item) => (
-          <WishlistItem key={item.id} item={item} />
+          <WishlistItem key={item._id} item={item} />
         ))}
       </div>
     </div>

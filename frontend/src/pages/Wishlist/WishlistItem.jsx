@@ -31,9 +31,9 @@ function WishlistItem({ item }) {
           <button
             className="wishlist-cart-btn"
             onClick={handleAddToCart}
-            disabled={isInCart(item.id)}
+            disabled={isInCart(item._id)}
           >
-            {isInCart(item.id) ? "In Cart" : "Add to Cart"}
+            {isInCart(item._id) ? "In Cart" : "Add to Cart"}
           </button>
 
           <button className="wishlist-remove-btn" onClick={handleRemove}>

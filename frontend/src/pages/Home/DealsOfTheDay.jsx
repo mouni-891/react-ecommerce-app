@@ -1,95 +1,96 @@
 import React, { useEffect, useState } from "react";
 import "./DealsOfTheDay.css";
 
-const deals = [
-  {
-    id: 1,
-    name: "Wireless Headphones",
-    brand: "Redragon",
-    price: 2199,
-    oldPrice: 2999,
-    rating: 4.3,
-    reviews: 1284,
-    image: "/hotPicks-images/electronics/headPhones.png",
-    tag: "Bestseller",
-  },
-  {
-    id: 2,
-    name: "Men Casual Shirt",
-    brand: "FabIndia",
-    price: 999,
-    oldPrice: 1299,
-    rating: 4.1,
-    reviews: 876,
-    image: "/Categories/men/menCasualBrownShirt.png",
-    tag: "Top Rated",
-  },
-  {
-    id: 3,
-    name: "Smart LED TV 43-inch",
-    brand: "VU Televisions",
-    price: 21999,
-    oldPrice: 28999,
-    rating: 4.5,
-    reviews: 3421,
-    image: "/hotPicks-images/electronics/smartTV.png",
-    tag: "Deal of the Day",
-  },
-  {
-   id: "4",
-    name: "Wedding Sherwani",
-    image: "/Categories/men/sherwani.png",
-    brand: "KISAH",
-    price: 6999,
-    oldPrice: 8999,
-    rating: 4.9,
-    reviews: 457,
-    tag: "Bestseller",
-  },
-];
-
 function pad(n) {
   return String(n).padStart(2, "0");
 }
 
-function StarRating({ rating }) {
+function StarRating({ rating, reviews }) {
   return (
     <div className="star-rating">
       <span className="rating-badge">
         {rating} ★
       </span>
-      <span className="rating-count">({(rating * 1000).toLocaleString("en-IN")})</span>
+      <span className="rating-count">
+        ({reviews?.toLocaleString("en-IN")})
+      </span>
     </div>
   );
 }
 
 function DealsOfTheDay({ onAddToCart, onToggleWishlist, wishlist = [] }) {
-  const [timeLeft, setTimeLeft] = useState({ hours: 23, minutes: 58, seconds: 43 });
+  const [deals, setDeals] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [addedToCart, setAddedToCart] = useState({});
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 23,
+    minutes: 59,
+    seconds: 59,
+  });
 
+  // 🔥 Fetch products from backend
   useEffect(() => {
-    const endTime = Date.now() + (23 * 3600 + 58 * 60 + 43) * 1000;
+    const fetchDeals = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/products");
+        const data = await res.json();
+
+        // Optional: filter only deal products
+        const dealProducts = data.filter(
+          (item) => item.oldPrice && item.price < item.oldPrice
+        );
+
+        setDeals(dealProducts);
+      } catch (error) {
+        console.error("Error fetching deals:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDeals();
+  }, []);
+
+  // ⏳ Countdown Timer
+  useEffect(() => {
+    const endTime = Date.now() + (23 * 3600 + 59 * 60 + 59) * 1000;
+
     const timer = setInterval(() => {
       const dist = endTime - Date.now();
-      if (dist <= 0) { clearInterval(timer); return; }
+
+      if (dist <= 0) {
+        clearInterval(timer);
+        return;
+      }
+
       setTimeLeft({
         hours: Math.floor((dist / (1000 * 3600)) % 24),
         minutes: Math.floor((dist / (1000 * 60)) % 60),
         seconds: Math.floor((dist / 1000) % 60),
       });
     }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
+  // 🛒 Add to cart
   const handleAddToCart = (item) => {
-    setAddedToCart((prev) => ({ ...prev, [item.id]: true }));
-    setTimeout(() => setAddedToCart((prev) => ({ ...prev, [item.id]: false })), 1800);
+    setAddedToCart((prev) => ({ ...prev, [item._id]: true }));
+
+    setTimeout(() => {
+      setAddedToCart((prev) => ({ ...prev, [item._id]: false }));
+    }, 1800);
+
     if (onAddToCart) onAddToCart(item);
   };
 
+  if (loading) {
+    return <p style={{ padding: "40px", textAlign: "center" }}>Loading deals...</p>;
+  }
+
   return (
     <section className="deals-section">
-      {/* Section Header */}
+      {/* Header */}
       <div className="deals-header">
         <div className="deals-title-group">
           <div className="deals-title">
@@ -118,40 +119,58 @@ function DealsOfTheDay({ onAddToCart, onToggleWishlist, wishlist = [] }) {
               ))}
             </div>
           </div>
+
           <button className="view-all-btn">View All Deals →</button>
         </div>
       </div>
 
-      {/* Divider */}
       <div className="section-divider" />
 
-      {/* Cards Grid */}
+      {/* Products Grid */}
       <div className="deals-grid">
         {deals.map((item) => {
-          const discount = Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100);
-          const isWishlisted = wishlist.includes(item.id);
-          const justAdded = addedToCart[item.id];
+          const discount = Math.round(
+            ((item.oldPrice - item.price) / item.oldPrice) * 100
+          );
+
+          const isWishlisted = wishlist.some(
+            (w) => w._id === item._id
+          );
+
+          const justAdded = addedToCart[item._id];
 
           return (
-            <div key={item.id} className="deal-card">
-              {/* Top badges */}
+            <div key={item._id} className="deal-card">
+              {/* Top row */}
               <div className="card-top-row">
-                <span className="discount-badge">-{discount}% OFF</span>
+                <span className="discount-badge">
+                  -{discount}% OFF
+                </span>
+
                 <button
-                  className={`deals-wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
-                  onClick={() => onToggleWishlist && onToggleWishlist(item.id)}
-                  aria-label="Wishlist"
+                  className={`deals-wishlist-btn ${
+                    isWishlisted ? "wishlisted" : ""
+                  }`}
+                  onClick={() =>
+                    onToggleWishlist && onToggleWishlist(item)
+                  }
                 >
-                  {isWishlisted ? "❤️" : "♡"}
+                  {isWishlisted ? "❤️" : "🤍"}
                 </button>
               </div>
 
               {/* Tag */}
-              {item.tag && <span className="product-tag">{item.tag}</span>}
+              {item.tag && (
+                <span className="product-tag">{item.tag}</span>
+              )}
 
               {/* Image */}
               <div className="card-image-wrapper">
-                <img src={item.image} alt={item.name} className="card-image" />
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="card-image"
+                />
               </div>
 
               {/* Info */}
@@ -159,24 +178,44 @@ function DealsOfTheDay({ onAddToCart, onToggleWishlist, wishlist = [] }) {
                 <p className="product-brand">{item.brand}</p>
                 <h4 className="product-name">{item.name}</h4>
 
-                <StarRating rating={item.rating} />
+                <StarRating
+                  rating={item.rating}
+                  reviews={item.reviews}
+                />
 
                 <div className="price-row">
-                  <span className="current-price">₹{item.price.toLocaleString("en-IN")}</span>
-                  <span className="old-price">₹{item.oldPrice.toLocaleString("en-IN")}</span>
-                  <span className="discount-text">{discount}% off</span>
+                  <span className="current-price">
+                    ₹{item.price.toLocaleString("en-IN")}
+                  </span>
+
+                  <span className="old-price">
+                    ₹{item.oldPrice.toLocaleString("en-IN")}
+                  </span>
+
+                  <span className="discount-text">
+                    {discount}% off
+                  </span>
                 </div>
 
-                <p className="free-delivery">✔ Free Delivery</p>
+                <p className="free-delivery">
+                  ✔ Free Delivery
+                </p>
 
                 <div className="card-actions">
                   <button
-                    className={`add-to-cart-btn ${justAdded ? "added" : ""}`}
+                    className={`add-to-cart-btn ${
+                      justAdded ? "added" : ""
+                    }`}
                     onClick={() => handleAddToCart(item)}
                   >
-                    {justAdded ? "✓ Added to Cart" : "🛒 Add to Cart"}
+                    {justAdded
+                      ? "✓ Added to Cart"
+                      : "🛒 Add to Cart"}
                   </button>
-                  <button className="buy-now-btn">Buy Now</button>
+
+                  <button className="buy-now-btn">
+                    Buy Now
+                  </button>
                 </div>
               </div>
             </div>
