@@ -1,4 +1,6 @@
 import { useCart } from "@/context/CartContext.jsx";
+import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
+import { getImageUrl } from "@/api";
 import "./cartPage.css";
 
 function CartItem({ item }) {
@@ -6,9 +8,9 @@ function CartItem({ item }) {
 
   const handleQuantityChange = (newQuantity) => {
     if (newQuantity <= 0) {
-      removeFromCart(item.id);
+      removeFromCart(item._id);
     } else {
-      updateQuantity(item.id, newQuantity);
+      updateQuantity(item._id, newQuantity);
     }
   };
 
@@ -16,37 +18,44 @@ function CartItem({ item }) {
 
   return (
     <div className="cart-item">
-      <img className="cart-item-image" src={item.img} alt={item.title} />
+      {/* Product Image */}
+      <img
+        className="cart-item-image"
+        src={getImageUrl(item.img)}
+        alt={item.name}
+      />
 
+      {/* Details */}
       <div className="cart-item-details">
         <h4 className="cart-item-title">{item.name}</h4>
         <p className="cart-item-price">₹{item.price.toFixed(2)}</p>
 
+        {/* Quantity Controls */}
         <div className="cart-item-quantity">
           <button
             className="quantity-btn"
             onClick={() => handleQuantityChange(item.quantity - 1)}
-            aria-label="Decrease quantity"
           >
-            −
+            <FaMinus />
           </button>
+
           <span className="quantity-value">{item.quantity}</span>
+
           <button
             className="quantity-btn"
             onClick={() => handleQuantityChange(item.quantity + 1)}
-            aria-label="Increase quantity"
           >
-            +
+            <FaPlus />
           </button>
         </div>
       </div>
 
+      {/* Remove Button */}
       <button
         className="remove-btn"
-        onClick={() => removeFromCart(item.id)}
-        aria-label="Remove item from cart"
+        onClick={() => removeFromCart(item._id)}
       >
-        Remove
+        <FaTrash />
       </button>
     </div>
   );

@@ -167,7 +167,7 @@ function DealsOfTheDay({ onAddToCart, onToggleWishlist, wishlist = [] }) {
               {/* Image */}
               <div className="card-image-wrapper">
                 <img
-                  src={item.image}
+                  src={item.thumbnail}
                   alt={item.name}
                   className="card-image"
                 />

@@ -6,11 +6,15 @@ import {
   useMemo,
   useEffect,
 } from "react";
+import { useAuth } from "@/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
@@ -28,32 +32,40 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = useCallback((product) => {
-    if (!product || !product._id) {
-      toast.error("Something went wrong. Try again.");
-      return;
-    }
-
-    let alreadyInCart = false;
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item._id === product._id);
-
-      if (existing) {
-        alreadyInCart = true;
-        return prev.map((item) =>
-          item._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        );
+  const addToCart = useCallback(
+    (product) => {
+      if (!user) {
+        toast.error("Please login first");
+        navigate("/login");
+        return;
       }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-    if (alreadyInCart) {
-      toast.success("Quantity updated");
-    } else {
-      toast.success("Item added to cart 🛒");
-    }
-  }, []);
+      if (!product || !product._id) {
+        toast.error("Something went wrong. Try again.");
+        return;
+      }
+
+      let alreadyInCart = false;
+      setCartItems((prev) => {
+        const existing = prev.find((item) => item._id === product._id);
+
+        if (existing) {
+          alreadyInCart = true;
+          return prev.map((item) =>
+            item._id === product._id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item,
+          );
+        }
+        return [...prev, { ...product, quantity: 1 }];
+      });
+      if (alreadyInCart) {
+        toast.success("Quantity updated");
+      } else {
+        toast.success("Item added to cart 🛒");
+      }
+    },
+    [user, navigate],
+  );
 
   const removeFromCart = useCallback((productId) => {
     setCartItems((prev) => prev.filter((item) => item._id !== productId));
@@ -91,15 +103,23 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }, [cartItems]);
 
-  const addToCartOnce = useCallback((product) => {
-    if (!product || !product._id) return;
+  const addToCartOnce = useCallback(
+    (product) => {
+      if (!user) {
+        toast.error("Please login first");
+        navigate("/login");
+        return;
+      }
+      if (!product || !product._id) return;
 
-    setCartItems((prev) => {
-      const exists = prev.find((item) => item._id === product._id);
-      if (exists) return prev;
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  }, []);
+      setCartItems((prev) => {
+        const exists = prev.find((item) => item._id === product._id);
+        if (exists) return prev;
+        return [...prev, { ...product, quantity: 1 }];
+      });
+    },
+    [user, navigate],
+  );
 
   const value = useMemo(
     () => ({

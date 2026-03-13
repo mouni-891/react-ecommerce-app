@@ -1,9 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
+import { useAuth } from "../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [wishlist, setWishlist] = useState(() => {
     const saved = localStorage.getItem("wishlist");
     return saved ? JSON.parse(saved) : [];
@@ -14,6 +17,11 @@ export const WishlistProvider = ({ children }) => {
   }, [wishlist]);
 
   const toggleWishlist = (product) => {
+    if (!user) {
+      alert("Please login first");
+      navigate("/login");
+      return;
+    }
     setWishlist((prev = []) => {
       const exists = prev.some((item) => item._id === product._id);
       if (exists) {
@@ -39,10 +47,4 @@ export const WishlistProvider = ({ children }) => {
   );
 };
 
-export const useWishlist = () => {
-  const context = useContext(WishlistContext);
-  if (!context) {
-    throw new Error("useWishlist must be used within a WishlistProvider");
-  }
-  return context;
-};
+export const useWishlist = () => useContext(WishlistContext);

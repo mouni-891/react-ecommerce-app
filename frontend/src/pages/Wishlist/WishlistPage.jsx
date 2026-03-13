@@ -2,6 +2,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useNavigate } from "react-router-dom";
 import WishlistItem from "@/pages/Wishlist/WishlistItem";
 import "./WishlistPage.css";
+import { getImageUrl } from "@/api";
 
 const WishlistPage = () => {
   const { wishlist } = useWishlist();
@@ -11,7 +12,7 @@ const WishlistPage = () => {
     return (
       <div className="wishlist-empty-container">
         <img
-          src="/wishlist/empty-wishlist.png"
+          src={getImageUrl(item.img)}
           alt="Empty Wishlist"
           className="wishlist-empty-image"
         />

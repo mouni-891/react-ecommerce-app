@@ -3,6 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import CartIcon from "./CartIcon";
 import WishlistIcon from "./WishlistIcon";
 import { useAuth } from "@/auth/AuthContext.jsx";
+import searchIcon from "@/assets/icons/searchIcon.png";
+import searchMic from "@/assets/icons/searchMic.png";
+import searchCamera from "@/assets/icons/searchCamera.png";
+import userIcon from "@/assets/icons/userIcon.png";
 import toast from "react-hot-toast";
 
 function Header() {
@@ -10,6 +14,13 @@ function Header() {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = () => {
+    if (searchTerm.trim() !== "") {
+      navigate(`/search?q=${searchTerm}`);
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -57,26 +68,37 @@ function Header() {
       </div>
 
       <div className="header-center">
-        <span className="search-icon">
-          <img src="/Images/searchIcon.png" alt="Search" width="15px" />
+        <span
+          className="search-icon"
+          onClick={handleSearch}
+          style={{ cursor: "pointer" }}
+        >
+          <img src={searchIcon} alt="Search" width="15px" />
         </span>
         <input
           type="text"
           placeholder="Search for Products, Brand..."
           className="search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
         <button className="search-btn voice-btn" title="Voice Search">
-          <img src="/Images/searchMic.png" alt="Voice" width="17px" />
+          <img src={searchMic} alt="Voice" width="17px" />
         </button>
         <button className="search-btn camera-btn" title="Camera Search">
-          <img src="/Images/searchCamera.png" alt="Camera" width="19px" />
+          <img src={searchCamera} alt="Camera" width="19px" />
         </button>
       </div>
 
       <div className="header-right">
         <div className="user-menu" ref={dropdownRef}>
           <button className="login-btn" onClick={handleLoginClick}>
-            <img src="/Images/user.png" alt="User" width="18px" />
+            <img src={userIcon} alt="User" width="18px" />
             <span className="login">{user ? `Hi, ${user.name}` : "Login"}</span>
             {user && <span className="dropdown-arrow">▼</span>}
           </button>

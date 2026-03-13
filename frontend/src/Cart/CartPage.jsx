@@ -16,7 +16,7 @@ function CartPage() {
       <h2>My Cart</h2>
       <div className="cart-items-container">
         {cartItems.map((item) => (
-          <CartItem key={item.id} item={item} />
+          <CartItem key={item._id} item={item} />
         ))}
       </div>
       <CartSummary />

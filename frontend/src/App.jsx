@@ -12,14 +12,13 @@ import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "@/auth/ProtectedRoute";
 import ProductDetail from "@/pages/ProductDetail/ProductDetail";
 import BeautyPage from "@/pages/Category/BeautyPage";
-import BeautySubCategoryProducts from "@/pages/Category/BeautySubCategoryProducts";
 import MyAccount from "@/pages/Account/MyAccount";
 import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
 import Privacy from "@/pages/Privacy/Privacy";
 import Terms from "@/pages/Terms/Terms";
 import CategoryPage from "@/pages/Home/CategoryPage";
-
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   return (
@@ -49,11 +48,10 @@ function App() {
 
               <Route path="/category/:category?" element={<CategoryPage />} />
               <Route path="/category/beauty" element={<BeautyPage />} />
-              <Route
-                path="/category/beauty/:subCategory"
-                element={<BeautySubCategoryProducts />}
-              />
-              <Route path="/product/:slugOrId" element={<ProductDetail />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+
+              {/* 🔍 Move Search Here */}
+              <Route path="/search" element={<SearchPage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/cart" element={<CartPage />} />

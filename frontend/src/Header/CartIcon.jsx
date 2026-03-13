@@ -1,5 +1,6 @@
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import cartIcon from "@/assets/icons/cart.png";
 
 function CartIcon() {
   const { cartItems } = useCart();
@@ -10,7 +11,7 @@ function CartIcon() {
       title="Shopping Cart"
       onClick={() => navigate("/cart")}
     >
-      <img src="/Images/shopping-cart.png" alt="Cart" width="23px" />
+      <img src={cartIcon} alt="Cart" width="23px" />
       <sup className="cart-badge">{cartItems.length}</sup>
     </button>
   );

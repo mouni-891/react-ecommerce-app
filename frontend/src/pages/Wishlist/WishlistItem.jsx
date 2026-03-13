@@ -1,6 +1,7 @@
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import toast from "react-hot-toast";
+import { getImageUrl } from "@/api";
 
 function WishlistItem({ item }) {
   const { toggleWishlist } = useWishlist();
@@ -20,7 +21,7 @@ function WishlistItem({ item }) {
   return (
     <div className="wishlist-item-confirms">
       <div className="wishlist-img-wrapper">
-        <img src={item.img} alt={item.name} className="wishlist-item-img" />
+        <img src={getImageUrl(item.img)} alt={item.name} className="wishlist-item-img" />
       </div>
 
       <div className="wishlist-item-info">

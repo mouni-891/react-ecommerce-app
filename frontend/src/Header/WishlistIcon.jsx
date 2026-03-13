@@ -1,5 +1,6 @@
 import { useWishlist } from "../context/WishlistContext";
 import { useNavigate } from "react-router-dom";
+import wishlistIcon from "@/assets/icons/wishlist.png";
 
 function WishlistIcon() {
   const { wishlist } = useWishlist();
@@ -11,7 +12,7 @@ function WishlistIcon() {
       title="Wishlist"
       onClick={() => navigate("/wishlist")}
     >
-      <img src="/Images/wishlist.png" alt="Wishlist" width="20px" />
+      <img src={wishlistIcon} alt="Wishlist" width="20px" />
 
       {wishlist.length > 0 && (
         <span className="wishlist-count">{wishlist.length}</span>

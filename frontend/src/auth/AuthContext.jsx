@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
+import axios from "axios";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -14,12 +14,15 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = () => {
       try {
         const savedUser = localStorage.getItem("user");
-        if (savedUser) {
+        const token = localStorage.getItem("token");
+
+        if (savedUser && token) {
           setUser(JSON.parse(savedUser));
         }
       } catch (error) {
         console.error("Error loading user:", error);
         localStorage.removeItem("user");
+         localStorage.removeItem("token");
       } finally {
         setLoading(false);
       }
@@ -28,35 +31,33 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (userData) => {  // ← Parameter is userData
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
+ const login = async (userData) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/login",
+      userData
+    );
 
-      // Basic validation
-      if (!userData.email || !userData.password) {
-        throw new Error("Email and password are required");
-      }
+    const { token, user } = response.data;
 
-      // Create user object
-      const newUser = {
-        name: userData.name,    
-        email: userData.email,  
-        id: Date.now(),
-      };
+    // Save token
+    localStorage.setItem("token", token);
 
-      setUser(newUser);
-      localStorage.setItem("user", JSON.stringify(newUser));
+     // Save user
+    localStorage.setItem("user", JSON.stringify(user));
 
-      return newUser;
-    } catch (error) {
-      throw new Error(error.message || "Login failed");
-    }
-  };
+    setUser(user);
+
+    return user;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Login failed");
+  }
+};
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
   };
 
   const value = {
