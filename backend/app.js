@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./src/config/db.js";
 import productRoutes from "./src/routes/productRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";  
 
 dotenv.config();
 connectDB();
@@ -12,11 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve images
 app.use("/images", express.static("public/images"));
 
-// API routes
+// Routes
 app.use("/api/products", productRoutes);
+app.use("/api", authRoutes);  
 
 app.get("/", (req, res) => {
   res.send("API is running...");

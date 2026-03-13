@@ -8,9 +8,9 @@ dotenv.config();
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`❌ Error: ${error.message}`);
     process.exit(1);
   }
 };
@@ -18,12 +18,12 @@ const connectDB = async () => {
 const importData = async () => {
   try {
     await connectDB();
-    await Product.deleteMany(); // remove existing products
+    await Product.deleteMany();
     await Product.insertMany(products);
-    console.log("Data Imported!");
+    console.log("✅ Data Imported! Total:", products.length, "products");
     process.exit();
   } catch (error) {
-    console.error(`${error}`);
+    console.error(`❌ Seed failed: ${error}`);
     process.exit(1);
   }
 };
