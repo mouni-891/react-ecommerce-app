@@ -18,7 +18,11 @@ import Contact from "@/pages/Contact/Contact";
 import Privacy from "@/pages/Privacy/Privacy";
 import Terms from "@/pages/Terms/Terms";
 import CategoryPage from "@/pages/Home/CategoryPage";
-import SearchPage from "./pages/SearchPage";
+import SearchPage from "@/pages/SearchPage";
+import Signup from "@/pages/Signup/Signup";
+import OAuthSuccess from "./pages/OAuthSuccess";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -61,6 +65,10 @@ function App() {
             </Route>
 
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/oauth-success" element={<OAuthSuccess />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="*" element={<h2>404 Not Found</h2>} />
           </Routes>
         </WishlistProvider>
